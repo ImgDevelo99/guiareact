@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva - Fundamentos de React Básico</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .app-header {
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-header img {
+            height: 50px; /* Adjust as needed */
+            margin-right: 15px;
+        }
+
+        .app-header span {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00457C; /* SENA Blue */
+        }
+
+        #guide-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .guide-step {
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .guide-step h2 {
+            color: #007bff;
+            margin-top: 0;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .code-demo {
+            background-color: #e9e9e9;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap; /* Handle long lines */
+            word-wrap: break-word;
+        }
+
+         .code-demo code {
+             display: block; /* Ensure padding works */
+         }
+
+        .visual-demo {
+            background-color: #d4edda; /* Light green */
+            color: #155724; /* Dark green */
+            padding: 15px;
+            border: 1px solid #c3e6cb;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre; /* Preserve formatting */
+            overflow-x: auto;
+        }
+
+        .exercise {
+            background-color: #fff3cd; /* Light yellow */
+            padding: 20px;
+            border: 1px solid #ffeeba;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .exercise textarea {
+            width: calc(100% - 24px); /* Adjust for padding */
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .navigation {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .navigation button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .navigation button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        .navigation button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <img src="https://i.postimg.cc/mZzx20gW/Logosimbolo-SENA-PRINCIPAL.png" alt="Logo SENA">
+        <span>Centro de Servicios y Gestión Empresarial</span>
+    </header>
+
+    <main id="guide-container">
+
+        <!-- Paso 1: ¿Qué es React? -->
+        <section class="guide-step" id="step-0">
+            <h2>Paso 1: ¿Qué es React?</h2>
+            <p>¡Bienvenido a esta guía interactiva de Fundamentos de React para principiantes! React es una biblioteca de JavaScript muy popular para construir interfaces de usuario (UI).</p>
+            <p>Desarrollada por Facebook (ahora Meta), permite crear componentes de UI reutilizables y eficientes. Su principal característica es que se enfoca en la "vista" de una aplicación web.</p>
+
+            <div class="section-title">Conceptos Clave Iniciales:</div>
+            <ul>
+                <li><strong>Declarativo:</strong> Describes cómo debería lucir tu UI en cualquier estado, y React se encarga de actualizarla eficientemente cuando los datos cambian.</li>
+                <li><strong>Basado en Componentes:</strong> Construyes aplicaciones con pequeñas piezas de código llamadas "componentes" que manejan su propio estado y pueden ser reutilizadas.</li>
+                <li><strong>Aprende una vez, escribe en cualquier lugar:</strong> Puedes usar React para desarrollar aplicaciones web (React DOM), móviles (React Native), o incluso de escritorio.</li>
+            </ul>
+
+            <p>En los siguientes pasos exploraremos cómo construir con estos conceptos.</p>
+
+            <div class="navigation">
+                <button id="prev-button-0" class="prev-button" disabled>Anterior</button>
+                <button id="next-button-0" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+        <!-- Paso 2: JSX - JavaScript XML -->
+        <section class="guide-step" id="step-1" style="display: none;">
+            <h2>Paso 2: JSX - JavaScript XML</h2>
+            <p>JSX es una extensión de sintaxis para JavaScript que permite escribir código similar a HTML dentro de JavaScript. Aunque no es obligatorio, es la forma más común y recomendada de trabajar con React.</p>
+            <p>JSX facilita la descripción de cómo debe lucir la UI de un componente.</p>
+
+            <div class="section-title">Demostración (Código):</div>
+            <div class="code-demo">
+                <code>
+                // Sin JSX (menos común y más verboso)
+                const elementNoJSX = React.createElement(
+                    'h1',
+                    { className: 'greeting' },
+                    '¡Hola, mundo!'
+                );
+
+                // Con JSX (más legible y directo)
+                const elementJSX = &lt;h1 className="greeting"&gt;¡Hola, mundo!&lt;/h1&gt;;
+                </code>
+            </div>
+
+             <div class="section-title">Demostración (Visualización Esperada):</div>
+            <div class="visual-demo">
+                <h1>
+                ¡Hola, mundo!
+                </h1>
+            </div>
+
+            <p>JSX parece HTML, pero es JavaScript. Puedes incrustar expresiones de JavaScript dentro de JSX usando llaves <code>{}</code>.</p>
+
+            <div class="section-title">Incrustando JavaScript en JSX:</div>
+             <div class="code-demo">
+                <code>
+                const name = 'SENA';
+                const greeting = &lt;h1&gt;¡Hola, {name}!&lt;/h1&gt;;
+
+                // Output esperado: ¡Hola, SENA!
+                </code>
+            </div>
+
+
+            <div class="exercise">
+                <h3>Ejercicio 1: Escribiendo JSX</h3>
+                <p>Escribe el código JSX para un párrafo <code>&lt;p&gt;</code> que contenga el texto "Aprendiendo React es genial!"</p>
+                <textarea id="exercise-1-input" placeholder="Escribe tu JSX aquí..."></textarea>
+                <button onclick="checkExercise('step-1')">Verificar Respuesta</button>
+                <div id="exercise-1-feedback" class="feedback"></div>
+            </div>
+
+
+            <div class="navigation">
+                <button id="prev-button-1" class="prev-button">Anterior</button>
+                <button id="next-button-1" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+        <!-- Paso 3: Componentes Funcionales -->
+        <section class="guide-step" id="step-2" style="display: none;">
+            <h2>Paso 3: Componentes Funcionales</h2>
+            <p>La forma más común de definir un componente en React hoy en día es usar una función de JavaScript. Estos se llaman <strong>Componentes Funcionales</strong>.</p>
+            <p>Una función de componente funcional acepta un objeto <code>props</code> (propiedades) como argumento y retorna un elemento de React (generalmente escrito con JSX) que describe lo que debe aparecer en la pantalla.</p>
+
+            <div class="section-title">Demostración (Código):</div>
+            <div class="code-demo">
+                <code>
+                // Define un componente funcional simple
+                function Saludo() {
+                  return &lt;h1&gt;¡Hola desde un componente!&lt;/h1&gt;;
+                }
+
+                // Puedes usar el componente como si fuera una etiqueta HTML
+                // &lt;Saludo /&gt;
+                </code>
+            </div>
+
+             <div class="section-title">Demostración (Visualización Esperada):</div>
+            <div class="visual-demo">
+                <h1>
+                ¡Hola desde un componente!
+                </h1>
+            </div>
+
+            <p>Los nombres de los componentes <strong>siempre deben empezar con una letra mayúscula</strong>. Esto ayuda a React a distinguirlos de los elementos HTML estándar (como <code>&lt;div&gt;</code> o <code>&lt;span&gt;</code>).</p>
+
+            <div class="exercise">
+                <h3>Ejercicio 2: Creando un Componente Funcional</h3>
+                <p>Escribe el código de un componente funcional llamado <code>BotonPrincipal</code> que retorne un elemento <code>&lt;button&gt;</code> con el texto "Haz Clic Aquí".</p>
+                <textarea id="exercise-2-input" placeholder="Escribe tu código de componente aquí..."></textarea>
+                <button onclick="checkExercise('step-2')">Verificar Respuesta</button>
+                <div id="exercise-2-feedback" class="feedback"></div>
+            </div>
+
+            <div class="navigation">
+                <button id="prev-button-2" class="prev-button">Anterior</button>
+                <button id="next-button-2" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+         <!-- Paso 4: Props (Propiedades) -->
+        <section class="guide-step" id="step-3" style="display: none;">
+            <h2>Paso 4: Props (Propiedades)</h2>
+            <p>Los componentes pueden recibir datos de sus componentes padres a través de <strong>props</strong>. Son como los atributos de los elementos HTML, pero puedes pasar cualquier tipo de dato JavaScript (strings, números, objetos, funciones, etc.).</p>
+            <p>Las props son de <strong>solo lectura</strong>. Un componente nunca debe modificar sus propias props.</p>
+
+            <div class="section-title">Demostración (Código):</div>
+            <div class="code-demo">
+                <code>
+                // Componente que recibe una prop 'nombre'
+                function SaludoConNombre(props) {
+                  return &lt;p&gt;¡Hola, {props.nombre}!&lt;/p&gt;;
+                }
+
+                // Uso del componente pasando la prop
+                // &lt;SaludoConNombre nombre="Aprendiz" /&gt;
+                // &lt;SaludoConNombre nombre="Instructor" /&gt;
+                </code>
+            </div>
+
+             <div class="section-title">Demostración (Visualización Esperada):</div>
+            <div class="visual-demo">
+                <p>
+                ¡Hola, Aprendiz!
+                </p>
+                <p>
+                ¡Hola, Instructor!
+                </p>
+            </div>
+
+             <div class="section-title">Desestructuración de Props (Común):</div>
+            <p>Es muy común desestructurar el objeto <code>props</code> para acceder a las propiedades más fácilmente:</p>
+            <div class="code-demo">
+                <code>
+                function SaludoConNombre({ nombre }) { // Desestructuración aquí
+                  return &lt;p&gt;¡Hola, {nombre}!&lt;/p&gt;;
+                }
+                </code>
+            </div>
+
+
+            <div class="exercise">
+                <h3>Ejercicio 3: Usando Props</h3>
+                <p>Completa el siguiente componente funcional <code>Tarjeta</code> para que reciba una prop llamada <code>titulo</code> y la muestre dentro de una etiqueta <code>&lt;h3&gt;</code>.</p>
+                <div class="code-demo">
+                   <code>
+                   function Tarjeta(props) {
+                     return (
+                       &lt;div style={ { border: '1px solid #ccc', padding: '10px' } }&gt;
+                         {/* PON TU CODIGO AQUI: Muestra props.titulo en un h3 */}
+                         {/* &lt;h3&gt;{...}&lt;/h3&gt; */}
+                       &lt;/div&gt;
+                     );
+                   }
+
+                   // Uso: &lt;Tarjeta titulo="Mi Primera Tarjeta" /&gt;
+                   </code>
+               </div>
+                <textarea id="exercise-3-input" placeholder="Escribe solo el código que va dentro del return de Tarjeta para mostrar el título..."></textarea>
+                <button onclick="checkExercise('step-3')">Verificar Respuesta</button>
+                <div id="exercise-3-feedback" class="feedback"></div>
+            </div>
+
+            <div class="navigation">
+                <button id="prev-button-3" class="prev-button">Anterior</button>
+                <button id="next-button-3" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+        <!-- Paso 5: State (Estado) con useState Hook -->
+        <section class="guide-step" id="step-4" style="display: none;">
+            <h2>Paso 5: State (Estado) con useState Hook</h2>
+            <p>Mientras que las props reciben datos de afuera y son inmutables, el <strong>estado (state)</strong> es data privada del componente que puede cambiar a lo largo del tiempo y disparar re-renderizaciones.</p>
+            <p>En componentes funcionales, manejamos el estado usando <strong>Hooks</strong>, específicamente el hook <code>useState</code>.</p>
+            <p><code>useState</code> es una función que retorna un array con dos elementos: el valor actual del estado y una función para actualizarlo. La llamas con el valor inicial del estado.</p>
+
+            <div class="section-title">Demostración (Código - Contador Simple):</div>
+            <div class="code-demo">
+                <code>
+                import React, { useState } from 'react'; // Necesitas importar useState
+
+                function Contador() {
+                  // Declara una variable de estado 'count' y su función 'setCount'
+                  const [count, setCount] = useState(0); // 0 es el valor inicial
+
+                  return (
+                    &lt;div&gt;
+                      &lt;p&gt;Hiciste clic {count} veces&lt;/p&gt;
+                      &lt;button onClick={() => setCount(count + 1)}&gt;
+                        Haz Clic
+                      &lt;/button&gt;
+                    &lt;/div&gt;
+                  );
+                }
+                </code>
+            </div>
+
+             <div class="section-title">Demostración (Visualización Esperada & Comportamiento):</div>
+            <div class="visual-demo">
+                <p>Hiciste clic 0 veces</p>
+                <button>
+                Haz Clic
+                </button>
+                <br>
+                {/* Imagina que al hacer clic, el número 0 cambia a 1, luego a 2, etc. */}
+                {/* React re-renderiza el componente con el nuevo valor de 'count' */}
+            </div>
+
+            <p>Cuando llamas a la función de actualización del estado (<code>setCount</code> en el ejemplo), React re-renderiza el componente con el nuevo valor del estado. Esto es fundamental para crear UIs dinámicas.</p>
+
+            <div class="exercise">
+                <h3>Ejercicio 4: Usando useState</h3>
+                <p>Completa el siguiente componente <code>TextoEditable</code>. Debe tener un estado llamado <code>texto</code> inicializado con "Texto Inicial". Muestra este estado en un <code>&lt;p&gt;</code>.</p>
+                 <div class="code-demo">
+                   <code>
+                   import React, { useState } from 'react';
+
+                   function TextoEditable() {
+                     // PON TU CODIGO AQUI: Declara el estado 'texto' con useState
+                     // const [... , ...] = useState(...);
+
+                     return (
+                       &lt;div&gt;
+                         {/* PON TU CODIGO AQUI: Muestra el valor del estado 'texto' */}
+                         {/* &lt;p&gt;...&lt;/p&gt; */}
+                         &lt;!-- Nota: Para cambiar el texto, necesitarías un input y un evento onChange, --&gt;
+                         &lt;!-- pero por ahora solo enfócate en declarar y mostrar el estado. --&gt;
+                       &lt;/div&gt;
+                     );
+                   }
+                   </code>
+               </div>
+                <textarea id="exercise-4-input" placeholder="Escribe el código de la declaración del estado y la etiqueta p que lo muestra..."></textarea>
+                <button onclick="checkExercise('step-4')">Verificar Respuesta</button>
+                <div id="exercise-4-feedback" class="feedback"></div>
+            </div>
+
+
+            <div class="navigation">
+                <button id="prev-button-4" class="prev-button">Anterior</button>
+                <button id="next-button-4" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+         <!-- Paso 6: Renderizando Componentes -->
+        <section class="guide-step" id="step-5" style="display: none;">
+            <h2>Paso 6: Renderizando Componentes</h2>
+            <p>Para que tus componentes de React aparezcan en el navegador, necesitas "renderizarlos" en un elemento DOM real. Esto se hace típicamente una vez al inicio de tu aplicación.</p>
+            <p>Las versiones modernas de React usan <code>ReactDOM.createRoot()</code> y su método <code>render()</code>.</p>
+
+            <div class="section-title">Demostración (Código - Archivo de Entrada Principal, ej: index.js):</div>
+            <div class="code-demo">
+                <code>
+                // Necesitas importar React y ReactDOM
+                import React from 'react';
+                import ReactDOM from 'react-dom/client';
+
+                // Importa el componente principal de tu aplicación (ej: App)
+                import App from './App'; // Asumiendo que App.js existe
+
+                // Encuentra el elemento DOM donde quieres montar tu app (usualmente un div con id="root")
+                const container = document.getElementById('root');
+
+                // Crea una raíz de React
+                const root = ReactDOM.createRoot(container);
+
+                // Renderiza tu componente principal dentro de la raíz
+                root.render(
+                  &lt;React.StrictMode&gt;
+                    &lt;App /&gt; {/* Aquí usas tu componente &lt;App&gt; */}
+                  &lt;/React.StrictMode&gt;
+                );
+                </code>
+            </div>
+
+             <div class="section-title">Concepto Clave: El 'root' DOM</div>
+            <p>Generalmente, en tu archivo HTML (ej: <code>index.html</code>), tendrás un <code>&lt;div id="root"&gt;&lt;/div&gt;</code> vacío. React tomará control de este div y gestionará todo su contenido.</p>
+
+             <div class="section-title">Demostración (Código - Archivo index.html):</div>
+             <div class="code-demo">
+                <code>
+                &lt;!DOCTYPE html&gt;
+                &lt;html lang="es"&gt;
+                &lt;head&gt;
+                  &lt;meta charset="utf-8" /&gt;
+                  &lt;title&gt;Mi App React&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                  &lt;div id="root"&gt;&lt;/div&gt; &lt;!-- Aquí es donde React montará la app --&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+                </code>
+             </div>
+
+
+             <div class="exercise">
+                <h3>Ejercicio 5: Concepto de Montaje</h3>
+                <p>¿Cuál es el ID común que se usa en un archivo HTML para el elemento donde React "monta" o "renderiza" la aplicación?</p>
+                <textarea id="exercise-5-input" placeholder="Escribe el ID aquí..."></textarea>
+                <button onclick="checkExercise('step-5')">Verificar Respuesta</button>
+                <div id="exercise-5-feedback" class="feedback"></div>
+            </div>
+
+
+            <div class="navigation">
+                <button id="prev-button-5" class="prev-button">Anterior</button>
+                <button id="next-button-5" class="next-button">Siguiente</button>
+            </div>
+        </section>
+
+         <!-- Paso 7: Conclusión -->
+        <section class="guide-step" id="step-6" style="display: none;">
+            <h2>Paso 7: ¡Felicidades!</h2>
+            <p>¡Has completado los fundamentos básicos de React! Hemos cubierto:</p>
+            <ul>
+                <li>Qué es React y sus principios.</li>
+                <li>Cómo usar JSX para describir UI.</li>
+                <li>Creación de Componentes Funcionales.</li>
+                <li>Paso de datos con Props.</li>
+                <li>Manejo de estado básico con <code>useState</code>.</li>
+                <li>Cómo se renderiza una aplicación React en el DOM.</li>
+            </ul>
+            <p>Este es solo el comienzo. Hay muchos más temas interesantes como manejo de eventos, listas y keys, efectos (<code>useEffect</code>), enrutamiento (React Router), manejo avanzado de estado y mucho más.</p>
+            <p>¡Sigue practicando y construyendo proyectos para afianzar tus conocimientos! El siguiente paso sería configurar un entorno de desarrollo con herramientas como Create React App, Vite o Next.js para empezar a codificar de verdad.</p>
+
+            <p>¡Mucho éxito en tu camino de aprendizaje!</p>
+
+
+            <div class="navigation">
+                <button id="prev-button-6" class="prev-button">Anterior</button>
+                <button id="next-button-6" class="next-button" disabled>Finalizar</button>
+            </div>
+        </section>
+
+
+    </main>
+
+    <script>
+        const steps = document.querySelectorAll('.guide-step');
+        let currentStepIndex = 0;
+
+        // Function to show a specific step
+        function showStep(index) {
+            // Hide all steps
+            steps.forEach(step => {
+                step.style.display = 'none';
+            });
+
+            // Show the requested step
+            if (steps[index]) {
+                steps[index].style.display = 'block';
+                currentStepIndex = index;
+
+                // Update button states
+                const prevButton = steps[index].querySelector('.prev-button');
+                const nextButton = steps[index].querySelector('.next-button');
+
+                if (prevButton) {
+                    prevButton.disabled = currentStepIndex === 0;
+                }
+                if (nextButton) {
+                     // Change text on the last step
+                    if (currentStepIndex === steps.length - 1) {
+                         nextButton.textContent = 'Finalizar';
+                         nextButton.disabled = true; // Disable after completing last step
+                    } else {
+                         nextButton.textContent = 'Siguiente';
+                         nextButton.disabled = false;
+                    }
+                }
+            }
+        }
+
+        // Function to navigate to the next step
+        function nextStep() {
+            if (currentStepIndex < steps.length - 1) {
+                showStep(currentStepIndex + 1);
+            }
+        }
+
+        // Function to navigate to the previous step
+        function prevStep() {
+            if (currentStepIndex > 0) {
+                showStep(currentStepIndex - 1);
+            }
+        }
+
+        // Function to check exercise answers
+        function checkExercise(stepId) {
+            const stepElement = document.getElementById(stepId);
+            const inputElement = stepElement.querySelector('textarea[id^="exercise-"]');
+            const feedbackElement = stepElement.querySelector('.feedback');
+            const inputValue = inputElement.value.trim();
+            let isCorrect = false;
+            let feedbackText = "";
+
+            switch (stepId) {
+                case 'step-1': // Exercise 1: JSX Paragraph
+                    // Check if it contains <p>...</p> and some relevant text
+                    if (/<p>.*?Aprendiendo React es genial!.*?<\/p>/i.test(inputValue) ||
+                         /<p>.*?Aprendiendo React es genial!/i.test(inputValue)) { // Also allow just the opening tag
+                         isCorrect = true;
+                         feedbackText = "¡Correcto! Ese es el JSX para un párrafo.";
+                    } else {
+                         isCorrect = false;
+                         feedbackText = "Incorrecto. Asegúrate de que sea una etiqueta <p> y contenga el texto solicitado.";
+                    }
+                    break;
+                case 'step-2': // Exercise 2: Functional Component
+                    // Check if it defines a function BotonPrincipal and returns <button>...</button>
+                    if (/function\s+BotonPrincipal\s*\(\s*\)\s*\{[\s\S]*return\s*<button>.*?Haz Clic Aquí.*?<\/button>[\s\S]*\}/i.test(inputValue) ||
+                        /const\s+BotonPrincipal\s*=\s*\(\s*\)\s*=>\s*\{?[\s\S]*return\s*<button>.*?Haz Clic Aquí.*?<\/button>[\s\S]*\}?/i.test(inputValue)) { // Allow arrow function too
+                        isCorrect = true;
+                        feedbackText = "¡Excelente! Has definido un componente funcional correcto.";
+                    } else {
+                        isCorrect = false;
+                        feedbackText = "Incorrecto. Revisa la sintaxis de la función y asegúrate de que retorne el botón con el texto exacto.";
+                    }
+                    break;
+                case 'step-3': // Exercise 3: Using Props
+                    // Check if it contains <h3>{props.titulo}</h3> or <h3>{titulo}</h3> (assuming destructuring)
+                    if (/<h3>\s*\{props\.titulo\}\s*<\/h3>/i.test(inputValue) ||
+                         /<h3>\s*\{titulo\}\s*<\/h3>/i.test(inputValue)) { // Allow desctructured version
+                         isCorrect = true;
+                         feedbackText = "¡Muy bien! Estás accediendo a la prop 'titulo' correctamente dentro del JSX.";
+                    } else {
+                         isCorrect = false;
+                         feedbackText = "Incorrecto. Asegúrate de que sea un <h3> y muestre el valor de la prop 'titulo' usando llaves.";
+                    }
+                    break;
+                case 'step-4': // Exercise 4: Using useState
+                    // Check for useState declaration and displaying the state variable
+                    if (/const\s*\[\s*texto\s*,\s*\w+\s*\]\s*=\s*useState\s*\(.*?\)/i.test(inputValue) &&
+                        /<p>.*?\{texto\}.*?<\/p>/i.test(inputValue)) {
+                        isCorrect = true;
+                        feedbackText = "¡Genial! Has declarado el estado 'texto' y lo estás mostrando en el párrafo.";
+                    } else {
+                         isCorrect = false;
+                         feedbackText = "Incorrecto. Revisa que declares el estado 'texto' con useState y lo muestres en un <p> usando {texto}.";
+                    }
+                    break;
+                case 'step-5': // Exercise 5: Root ID
+                    // Check if the input is 'root'
+                    if (inputValue.toLowerCase() === 'root') {
+                        isCorrect = true;
+                        feedbackText = "¡Correcto! El ID común es 'root'.";
+                    } else {
+                        isCorrect = false;
+                        feedbackText = "Incorrecto. Ese no es el ID típicamente usado para el contenedor principal.";
+                    }
+                    break;
+                default:
+                    feedbackText = "Ejercicio no configurado.";
+            }
+
+            // Display feedback
+            feedbackElement.classList.remove('correct', 'incorrect');
+            feedbackElement.style.display = 'block';
+            if (isCorrect) {
+                feedbackElement.classList.add('correct');
+                feedbackElement.textContent = feedbackText;
+            } else {
+                feedbackElement.classList.add('incorrect');
+                feedbackElement.textContent = feedbackText;
+            }
+        }
+
+
+        // Add event listeners to navigation buttons within each step
+        steps.forEach((step, index) => {
+            const prevButton = step.querySelector('.prev-button');
+            const nextButton = step.querySelector('.next-button');
+
+            if (prevButton) {
+                // Use dataset to store the target index
+                prevButton.addEventListener('click', prevStep);
+            }
+            if (nextButton) {
+                 nextButton.addEventListener('click', nextStep);
+            }
+        });
+
+
+        // Initialize: Show the first step when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep(0);
+        });
+
+    </script>
+
+</body>
+</html>

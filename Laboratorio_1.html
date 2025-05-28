@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Fundamentos React Básico</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 2px solid #00457c; /* SENA blue */
+            display: flex;
+            align-items: center;
+        }
+        header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #00457c; /* SENA blue */
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h2, h3 {
+            color: #0077b6; /* A lighter blue */
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-left: 3px solid #0077b6;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            margin-bottom: 1.6em;
+            max-width: 100%;
+            overflow: auto;
+            padding: 1em 1.5em;
+            display: block;
+            word-wrap: break-word;
+        }
+        code {
+            font-family: monospace;
+            background-color: #eef;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        textarea {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        button {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .simulation-output {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px dashed #0077b6;
+            background-color: #e9f7ff;
+            border-radius: 5px;
+            min-height: 30px; /* Ensure visibility even if empty */
+        }
+
+        /* Specific styles for state simulation */
+        #state-simulation button {
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://i.postimg.cc/mZzx20gW/Logosimbolo-SENA-PRINCIPAL.png" alt="Logo SENA">
+        <h1>Centro de Servicios y Gestión Empresarial</h1>
+    </header>
+
+    <div class="container">
+
+        <section>
+            <h2>Introducción a React</h2>
+            <p>¡Bienvenido a este laboratorio básico sobre Fundamentos de React! Aquí exploraremos los conceptos esenciales para empezar a construir interfaces de usuario con React. No necesitas instalar nada por ahora, ¡todo funciona aquí mismo en tu navegador!</p>
+            <p>React es una biblioteca de JavaScript para construir interfaces de usuario (UI). Se centra en la creación de componentes reutilizables y en la forma eficiente de actualizar lo que el usuario ve cuando los datos cambian.</p>
+            <p>En este lab, cubriremos:</p>
+            <ul>
+                <li>JSX: La sintaxis especial de React.</li>
+                <li>Componentes: Los bloques de construcción de React.</li>
+                <li>Props: Cómo pasar datos entre componentes.</li>
+                <li>Estado (State): Cómo manejar datos que cambian dentro de un componente.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 id="jsx-section">JSX: JavaScript + XML/HTML</h2>
+            <p>JSX es una extensión de sintaxis para JavaScript. ¡Parece HTML o XML, pero en realidad es JavaScript! Permite describir la estructura de tu interfaz de usuario de una manera muy familiar.</p>
+            <pre><code>
+const elemento = &lt;h1&gt;¡Hola, React!&lt;/h1&gt;;
+            </code></pre>
+            <p>Aunque parezca HTML, no lo es. Los navegadores no entienden JSX directamente. Herramientas como Babel lo transforman en llamadas a funciones de JavaScript que crean elementos de interfaz (como <code>React.createElement</code>).</p>
+
+            <h3>Reglas Básicas de JSX:</h3>
+            <ul>
+                <li>Debe haber un único elemento padre (como en HTML).</li>
+                <li>Las etiquetas deben cerrarse (<code>&lt;img /&gt;</code>, <code>&lt;div&gt;&lt;/div&gt;</code>).</li>
+                <li>Los atributos HTML usan <code>camelCase</code> (ej: <code>className</code> en lugar de <code>class</code>, <code>htmlFor</code> en lugar de <code>for</code>).</li>
+                <li>Puedes insertar expresiones JavaScript dentro de llaves <code>{}</code>.</li>
+            </ul>
+
+            <h3>Ejercicio Interactivo 1: Convertir a JSX</h3>
+            <p>Abajo tienes un fragmento de HTML simple. Intenta escribir la versión equivalente en JSX. Recuerda las reglas, especialmente <code>className</code>.</p>
+            <pre><code>
+&lt;div class="mensaje"&gt;
+  &lt;p&gt;Este es un párrafo de ejemplo.&lt;/p&gt;
+&lt;/div&gt;
+            </code></pre>
+            <label for="jsx-exercise">Tu código JSX:</label><br>
+            <textarea id="jsx-exercise" placeholder="Escribe tu JSX aquí..."></textarea><br>
+            <button onclick="checkJSXExercise()">Verificar</button>
+            <p id="feedback-jsx" class="feedback"></p>
+        </section>
+
+        <section>
+            <h2 id="components-section">Componentes: Los Bloques de Construcción</h2>
+            <p>Los componentes son el corazón de React. Son como funciones de JavaScript que devuelven elementos de React (que son creados con JSX). Puedes pensarlos como piezas de UI reutilizables.</p>
+            <p>Hay dos tipos principales: componentes de función y componentes de clase. Para este nivel básico, nos enfocaremos en los <strong>componentes de función</strong>, que son más sencillos y modernos.</p>
+
+            <h3>Componente de Función Básico:</h3>
+            <pre><code>
+function Saludo() {
+  return &lt;h1&gt;¡Hola desde un Componente!&lt;/h1&gt;;
+}
+            </code></pre>
+            <p>Notas:</p>
+            <ul>
+                <li>El nombre del componente <strong>siempre</strong> debe empezar con mayúscula (<code>Saludo</code>, no <code>saludo</code>).</li>
+                <li>La función devuelve el JSX que define la UI del componente.</li>
+            </ul>
+
+            <h3>Ejercicio Interactivo 2: Crear un Componente Simple</h3>
+            <p>Crea un componente de función llamado <code>Mensaje</code> que devuelva un párrafo <code>&lt;p&gt;</code> con el texto "¡Este es mi primer componente!".</p>
+             <label for="component-exercise">Tu código de componente:</label><br>
+            <textarea id="component-exercise" placeholder="Escribe tu componente aquí..."></textarea><br>
+            <button onclick="checkComponentExercise()">Verificar</button>
+            <p id="feedback-component" class="feedback"></p>
+        </section>
+
+         <section>
+            <h2 id="rendering-section">Renderizando Componentes</h2>
+            <p>Crear un componente no lo muestra automáticamente en la página. Necesitas "renderizarlo" en un lugar específico del DOM (el árbol de elementos de tu página HTML).</p>
+            <p>Tradicionalmente, se usaba <code>ReactDOM.render()</code>. En versiones modernas de React, se usa <code>createRoot()</code>.</p>
+
+            <h3>Ejemplo con <code>createRoot</code> (React 18+):</h3>
+            <pre><code>
+import ReactDOM from 'react-dom/client'; // Importación
+
+const root = ReactDOM.createRoot(document.getElementById('root')); // Busca el elemento raíz en tu HTML
+root.render(&lt;Saludo /&gt;); // Renderiza el componente &lt;Saludo /&gt; dentro del elemento raíz
+            </code></pre>
+            <p>Aquí, <code>&lt;Saludo /&gt;</code> es cómo usas el componente <code>Saludo</code> dentro de JSX (o dentro de la función <code>render</code>). Parece una etiqueta HTML, pero es tu componente.</p>
+            <p>El elemento con <code>id="root"</code> (o similar) es el contenedor principal donde tu aplicación React se "monta".</p>
+
+            <h3>Simulación de Renderizado:</h3>
+            <p>Imagina que el siguiente recuadro es el elemento con <code>id="root"</code> donde renderizaremos algo:</p>
+            <div id="simulation-root" class="simulation-output">
+                <!-- Aquí se "renderizará" algo -->
+                <p style="text-align: center; color: #888;">Contenedor de renderizado (simulado)</p>
+            </div>
+            <p>Cuando renderizas <code>&lt;h1&gt;Hola!&lt;/h1&gt;</code>, el contenido de ese contenedor cambia a:</p>
+             <div class="simulation-output">
+                <h1>Hola!</h1>
+            </div>
+            <p>Cuando renderizas <code>&lt;Saludo /&gt;</code> (usando el componente que devuelve <code>&lt;h1&gt;¡Hola desde un Componente!&lt;/h1&gt;</code>), el contenido cambia a:</p>
+             <div class="simulation-output">
+                <h1>¡Hola desde un Componente!</h1>
+            </div>
+             <p>El punto clave es que el código de renderizado conecta tu componente (lo que devuelve) con un lugar en tu HTML.</p>
+        </section>
+
+
+        <section>
+            <h2 id="props-section">Props: Pasando Datos</h2>
+            <p>Los componentes son más útiles cuando pueden recibir datos para volverse dinámicos y reutilizables. Estos datos se pasan a través de las "props" (abreviatura de "properties").</p>
+            <p>Las props se pasan al componente como atributos cuando lo usas (similar a los atributos HTML):</p>
+            <pre><code>
+&lt;Saludo nombre="Alice" /&gt;
+&lt;Saludo nombre="Bob" /&gt;
+            </code></pre>
+            <p>Dentro del componente de función, las props se reciben como el primer argumento, usualmente llamado <code>props</code>:</p>
+             <pre><code>
+function Saludo(props) {
+  // props es un objeto: { nombre: "Alice" } o { nombre: "Bob" }
+  return &lt;p&gt;¡Hola, {props.nombre}!&lt;/p&gt;;
+}
+            </code></pre>
+            <p>Usamos las llaves <code>{}</code> dentro de JSX para insertar el valor de <code>props.nombre</code>.</p>
+
+            <h3>Ejercicio Interactivo 3: Usar Props</h3>
+            <p>Modifica tu componente <code>Mensaje</code> del ejercicio anterior para que acepte una prop llamada <code>contenido</code> y muestre ese contenido dentro del párrafo.</p>
+             <label for="props-exercise">Tu código de componente <code>Mensaje</code> con props:</label><br>
+            <textarea id="props-exercise" placeholder="function Mensaje(props) { ... }"></textarea><br>
+            <button onclick="checkPropsExercise()">Verificar</button>
+            <p id="feedback-props" class="feedback"></p>
+
+            <h3>Simulación de Uso de Props:</h3>
+            <p>Si usaras tu componente modificado así:</p>
+             <pre><code>
+&lt;Mensaje contenido="¡Aprendiendo Props!" /&gt;
+            </code></pre>
+            <p>La salida simulada sería:</p>
+             <div class="simulation-output">
+                 <p>¡Aprendiendo Props!</p>
+             </div>
+             <p>Si lo usaras así:</p>
+             <pre><code>
+&lt;Mensaje contenido="¡Son muy útiles!" /&gt;
+            </code></pre>
+            <p>La salida simulada sería:</p>
+             <div class="simulation-output">
+                 <p>¡Son muy útiles!</p>
+             </div>
+        </section>
+
+        <section>
+             <h2 id="state-section">Estado (State): Manejando Datos Cambiantes</h2>
+             <p>Mientras que las props permiten pasar datos de padres a hijos, el "estado" permite a un componente gestionar y rastrear sus propios datos privados que pueden cambiar con el tiempo.</p>
+             <p>Cuando el estado de un componente cambia, React automáticamente vuelve a renderizar el componente y sus hijos (si es necesario) para reflejar el cambio. Esto es clave para crear UIs interactivas.</p>
+
+             <p>Para componentes de función, usamos el "Hook" llamado <code>useState</code> para añadir estado.</p>
+
+              <h3>Ejemplo Básico con <code>useState</code>:</h3>
+              <pre><code>
+import React, { useState } from 'react'; // Importa useState
+
+function Contador() {
+  // Declara una variable de estado 'cuenta' y una función para actualizarla 'setCuenta'
+  // Inicia la cuenta en 0
+  const [cuenta, setCuenta] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Has clickeado {cuenta} veces&lt;/p&gt;
+      &lt;button onClick={() => setCuenta(cuenta + 1)}&gt;
+        Clickéame
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}
+              </code></pre>
+              <p>Notas:</p>
+              <ul>
+                  <li><code>useState(0)</code> inicializa el estado con el valor <code>0</code> y devuelve un array con dos elementos: el valor actual del estado (<code>cuenta</code>) y una función para actualizar ese estado (<code>setCuenta</code>).</li>
+                  <li>Usamos la sintaxis de desestructuración de array <code>const [cuenta, setCuenta] = ...</code> para obtener estos dos elementos en variables separadas.</li>
+                  <li>El atributo <code>onClick</code> en JSX (nota el camelCase) maneja eventos. Le pasamos una función que llama a <code>setCuenta</code> para actualizar el estado.</li>
+                  <li>Cuando <code>setCuenta</code> es llamada, React sabe que el estado ha cambiado y re-renderiza el componente <code>Contador</code>. La nueva renderización usará el nuevo valor de <code>cuenta</code>.</li>
+              </ul>
+
+              <h3>Simulación Interactiva de Estado (Sin React):</h3>
+              <p>Aunque no estamos usando React real, podemos simular el comportamiento básico de un estado cambiante y cómo actualiza la interfaz. Observa cómo el número cambia al hacer click.</p>
+              <div id="state-simulation">
+                  <p id="state-display">Has clickeado <span id="click-count">0</span> veces</p>
+                  <button id="state-button">Clickéame</button>
+              </div>
+
+              <p>Este ejemplo de simulación demuestra la idea clave del estado: un dato (el número de clicks) que se mantiene dentro del componente (simulado por variables JS aquí) y que al ser actualizado, "refresca" la parte de la UI que lo muestra.</p>
+
+        </section>
+
+         <section>
+             <h2>Conclusión</h2>
+             <p>¡Felicidades! Has completado las bases de React: JSX, Componentes, Props y Estado. Estos son los pilares para construir aplicaciones más complejas.</p>
+             <p>A partir de aquí, puedes profundizar en:</p>
+             <ul>
+                 <li>Más sobre Hooks (<code>useEffect</code>, <code>useContext</code>, etc.)</li>
+                 <li>Manejo de eventos más avanzado.</li>
+                 <li>Listas y claves (Keys).</li>
+                 <li>Enrutamiento (Routing).</li>
+                 <li>Gestión de estado global (Context API, Redux, Zustand).</li>
+                 <li>Consumo de APIs.</li>
+             </ul>
+             <p>La práctica constante es clave. Intenta construir pequeños proyectos combinando estos conceptos.</p>
+             <p>¡Mucho éxito en tu aprendizaje de React!</p>
+         </section>
+
+
+    </div> <!-- /container -->
+
+    <script>
+        // JavaScript para la interactividad
+
+        // --- Ejercicio JSX ---
+        function checkJSXExercise() {
+            const input = document.getElementById('jsx-exercise').value.trim();
+            const feedbackElement = document.getElementById('feedback-jsx');
+            const lowerInput = input.toLowerCase().replace(/\s+/g, ''); // Normalize spaces and case for basic check
+
+            // Basic checks for JSX structure and className
+            const isCorrect = lowerInput.includes('<divclassname="mensaje">') &&
+                              lowerInput.includes('<p>') &&
+                              lowerInput.includes('esteesunpárafodeejemplo.') &&
+                              lowerInput.includes('</p>') &&
+                              lowerInput.includes('</div>');
+
+
+            if (isCorrect) {
+                feedbackElement.textContent = "¡Correcto! Has usado className y la estructura es la esperada.";
+                feedbackElement.className = 'feedback correct';
+            } else {
+                feedbackElement.textContent = "Incorrecto. Asegúrate de usar `className` en lugar de `class` y que las etiquetas estén correctamente anidadas y cerradas.";
+                feedbackElement.className = 'feedback incorrect';
+            }
+        }
+
+        // --- Ejercicio Component ---
+         function checkComponentExercise() {
+            const input = document.getElementById('component-exercise').value.trim();
+            const feedbackElement = document.getElementById('feedback-component');
+            const lowerInput = input.toLowerCase();
+
+            // Basic checks: function definition, component name capitalized, return, paragraph tag, specific text
+            const hasFunction = lowerInput.includes('function ');
+            const hasCapitalName = input.includes('function Mensaje'); // Check capitalization specifically
+            const hasReturn = lowerInput.includes('return');
+            const hasParagraph = lowerInput.includes('<p>') && lowerInput.includes('</p>');
+            const hasCorrectText = lowerInput.includes('¡esteesmiprimercomponente!'.toLowerCase());
+
+            if (hasFunction && hasCapitalName && hasReturn && hasParagraph && hasCorrectText) {
+                feedbackElement.textContent = "¡Excelente! Has creado un componente de función básico que devuelve el JSX correcto.";
+                feedbackElement.className = 'feedback correct';
+            } else {
+                let message = "Incorrecto. Verifica lo siguiente:\n";
+                if (!hasFunction) message += "- ¿Definiste una función?\n";
+                if (!hasCapitalName) message += "- ¿El nombre de la función es `Mensaje` y empieza con mayúscula?\n";
+                if (!hasReturn) message += "- ¿Tu función devuelve el JSX usando `return`?\n";
+                 if (!hasParagraph) message += "- ¿Incluiste la etiqueta `<p>` y `</p>`?\n";
+                if (!hasCorrectText) message += "- ¿El texto dentro del párrafo es exactamente '¡Este es mi primer componente!'?\n";
+                feedbackElement.textContent = message;
+                feedbackElement.className = 'feedback incorrect';
+            }
+        }
+
+        // --- Ejercicio Props ---
+         function checkPropsExercise() {
+            const input = document.getElementById('props-exercise').value.trim();
+            const feedbackElement = document.getElementById('feedback-props');
+            const lowerInput = input.toLowerCase();
+
+            // Basic checks: function definition, component name, accepting props, using props inside JSX
+            const hasFunction = lowerInput.includes('function ');
+            const hasCapitalName = input.includes('function Mensaje'); // Check capitalization
+            const acceptsProps = input.includes('(props)'); // Check if 'props' argument is present
+            const usesPropsInJSX = lowerInput.includes('{props.contenido}'); // Check if props.contenido is used in JSX
+
+             // More robust check for JSX return structure containing the prop usage
+            const returnMatches = input.match(/return\s*\(?[\s\S]*<p>[\s\S]*{props\.contenido}[\s\S]*<\/p>[\s\S]*\)?;/i);
+
+
+            if (hasFunction && hasCapitalName && acceptsProps && usesPropsInJSX && returnMatches) {
+                feedbackElement.textContent = "¡Muy bien! Tu componente Mensaje ahora acepta y muestra el contenido pasado por props.";
+                feedbackElement.className = 'feedback correct';
+            } else {
+                let message = "Incorrecto. Verifica lo siguiente:\n";
+                 if (!hasFunction) message += "- ¿Es una función?\n";
+                 if (!hasCapitalName) message += "- ¿El nombre es `Mensaje` (con M mayúscula)?\n";
+                 if (!acceptsProps) message += "- ¿La función tiene `props` como argumento? (ej: `function Mensaje(props)`)\n";
+                 if (!usesPropsInJSX) message += "- ¿Estás usando `{props.contenido}` dentro de tu JSX, probablemente en la etiqueta `<p>`?\n";
+                 if (!returnMatches && usesPropsInJSX) message += "- Asegúrate de que `{props.contenido}` esté correctamente dentro de tu JSX devuelto (ej: `<p> {props.contenido} </p>`).\n";
+
+                feedbackElement.textContent = message;
+                feedbackElement.className = 'feedback incorrect';
+            }
+        }
+
+        // --- Simulación de Estado (Vanilla JS) ---
+        let currentCount = 0;
+        const clickCountSpan = document.getElementById('click-count');
+        const stateButton = document.getElementById('state-button');
+
+        if (stateButton && clickCountSpan) {
+            stateButton.addEventListener('click', () => {
+                currentCount++; // Simulate state update
+                clickCountSpan.textContent = currentCount; // Update UI based on new "state"
+            });
+        }
+
+
+    </script>
+
+</body>
+</html>
