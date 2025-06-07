@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva: Estados en React (Básico)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header img {
+            height: 40px; /* Ajusta la altura de la imagen */
+            margin-right: 15px;
+        }
+        header span {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #004085; /* Color institucional SENA */
+        }
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px); /* Altura viewport - altura header */
+        }
+        nav {
+            width: 250px;
+            background-color: #e9e9e9;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto; /* Permitir scroll si la navegación es larga */
+        }
+        nav h2 {
+            margin-top: 0;
+            color: #004085;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav li {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+        nav li:hover {
+            background-color: #dcdcdc;
+        }
+        nav li.active {
+            background-color: #c0e0ff; /* Azul claro para el paso activo */
+            font-weight: bold;
+            color: #004085;
+        }
+        main {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto; /* Permitir scroll si el contenido es largo */
+        }
+        .step {
+            display: none; /* Oculta todos los pasos por defecto */
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .step.active {
+            display: block; /* Muestra el paso activo */
+        }
+        h1, h2 {
+            color: #004085;
+            margin-bottom: 15px;
+        }
+        h2 {
+            border-bottom: 2px solid #004085;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        code {
+            background-color: #f8f8f8;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto; /* Permite scroll horizontal en bloques de código largos */
+            margin-bottom: 20px;
+        }
+        pre code {
+            padding: 0;
+        }
+        .demo, .exercise {
+            border: 1px dashed #ccc;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .demo h3, .exercise h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .demo-area, .exercise-area {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eee;
+            border-radius: 5px;
+        }
+        .demo-output, .exercise-output {
+            margin-top: 10px;
+            font-weight: bold;
+            min-height: 1.2em; /* Ensure space even when empty */
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .nav-buttons {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .nav-buttons button {
+            margin-left: 10px;
+            margin-right: 0;
+        }
+        .exercise button.check-btn {
+             background-color: #28a745; /* Verde */
+        }
+        .exercise button.check-btn:hover:not(:disabled) {
+            background-color: #218838;
+        }
+        .clear {
+            clear: both; /* Useful for float-based layouts, though flex is used here */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://i.postimg.cc/mZzx20gW/Logosimbolo-SENA-PRINCIPAL.png" alt="Logo SENA">
+        <span>Centro de Servicios y Gestión Empresarial</span>
+    </header>
+
+    <div class="container">
+        <nav id="sidebar">
+            <h2>Temas</h2>
+            <ul>
+                <li data-step="0" class="active">Introducción</li>
+                <li data-step="1">1. Estado Local</li>
+                <li data-step="2">2. Estado Global</li>
+                <li data-step="3">3. Estado Derivado</li>
+                <li data-step="4">4. Estado Asincrónico</li>
+                <li data-step="5">5. Estado de Formulario</li>
+                <li data-step="6">6. Estado de UI</li>
+                <li data-step="7">7. Estado Persistente</li>
+                <li data-step="8">¡Felicidades!</li>
+            </ul>
+        </nav>
+
+        <main id="content">
+
+            <!-- Step 0: Introducción -->
+            <section class="step active" id="step-0">
+                <h1>Guía Interactiva: Estados en React (Nivel Básico)</h1>
+                <p>¡Bienvenido a esta guía básica sobre el manejo de estados en React!</p>
+                <p>El estado es fundamental en React; representa los datos que cambian con el tiempo y afectan cómo se renderiza tu aplicación.</p>
+                <p>Aprenderás sobre diferentes tipos de estado y cómo gestionarlos usando Hooks de React como <code>useState</code> y <code>useContext</code> (¡aunque no escribiremos código React directamente en esta guía, simularemos su comportamiento!).</p>
+                <p>Esta guía te llevará paso a paso a través de los conceptos con explicaciones, demostraciones interactivas simuladas y ejercicios prácticos.</p>
+                <p>Usa la barra lateral para navegar o los botones "Siguiente" / "Anterior" al final de cada sección.</p>
+
+                <div class="nav-buttons">
+                    <button class="next-btn">Comenzar</button>
+                </div>
+            </section>
+
+            <!-- Step 1: Estado Local -->
+            <section class="step" id="step-1">
+                <h2>1. Estado Local</h2>
+                <p>El estado local es el estado que pertenece y es gestionado *dentro* de un componente específico.</p>
+                <p>Es ideal para datos que solo necesita ese componente para su funcionamiento interno (como un contador, visibilidad de un elemento, o valor de un input *dentro* de un componente de input simple).</p>
+
+                <h3>Sintaxis Básica (React Hooks)</h3>
+                <p>En componentes funcionales, usamos el Hook <code>useState</code>:</p>
+                <pre><code>
+import React, { useState } from 'react';
+
+function MiComponente() {
+  // Declara una variable de estado 'contador' y una función para actualizarla 'setContador'
+  const [contador, setContador] = useState(0); // 0 es el valor inicial
+
+  const incrementar = () => {
+    setContador(contador + 1); // Usa la función setter para actualizar el estado
+  };
+
+  return (
+    &lt;div>
+      &lt;p>El contador es: {contador}&lt;/p>
+      &lt;button onClick={incrementar}>Incrementar&lt;/button>
+    &lt;/div>
+  );
+}
+                </code></pre>
+                <p><code>useState</code> retorna un array con dos elementos: el valor actual del estado y una función para actualizarlo. Cuando usas la función actualizadora (<code>setContador</code>), React re-renderiza el componente con el nuevo valor.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos un contador local para un componente:</p>
+                    <div class="demo-area">
+                        <p>Estado interno del componente: <span id="local-counter-display">0</span></p>
+                        <button id="local-counter-increment">Incrementar Contador</button>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>Si haces clic en "Incrementar Contador" 3 veces en la demostración anterior, ¿cuál será el valor final del estado local?</p>
+                    <div class="exercise-area">
+                        Tu respuesta: <input type="number" id="local-exercise-input">
+                        <button class="check-btn" data-exercise="local">Verificar</button>
+                        <div class="feedback" id="local-exercise-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+            <!-- Step 2: Estado Global -->
+            <section class="step" id="step-2">
+                <h2>2. Estado Global</h2>
+                <p>El estado global es aquel al que múltiples componentes, sin importar cuán lejos estén en el árbol de componentes, necesitan acceder y/o modificar.</p>
+                <p>Gestionarlo localmente y pasar datos a través de props (prop-drilling) se vuelve complicado rápidamente en aplicaciones grandes.</p>
+                <p>Herramientas comunes para estado global incluyen el Context API de React (con <code>useContext</code>) o librerías externas como Redux, Zustand, Recoil, etc.</p>
+
+                <h3>Sintaxis Básica (React Context API)</h3>
+                <p>Usando <code>createContext</code> y <code>useContext</code>:</p>
+                <pre><code>
+// 1. Crea un Contexto
+const MiContexto = React.createContext(defaultValue);
+
+// 2. Provee el contexto (normalmente en un componente superior)
+function App() {
+  const [datosGlobales, setDatosGlobales] = useState('Datos iniciales');
+
+  return (
+    &lt;MiContexto.Provider value={{ datosGlobales, setDatosGlobales }}>
+      &lt;ComponenteA />
+      &lt;ComponenteB /> {/* Ambos pueden acceder a MiContexto */}
+    &lt;/MiContexto.Provider>
+  );
+}
+
+// 3. Consume el contexto en cualquier componente hijo
+function ComponenteA() {
+  const { datosGlobales, setDatosGlobales } = useContext(MiContexto);
+
+  return (
+    &lt;div>
+      &lt;p>Componente A lee: {datosGlobales}&lt;/p>
+      &lt;button onClick={() => setDatosGlobales('Actualizado desde A')}>Actualizar Global&lt;/button>
+    &lt;/div>
+  );
+}
+
+function ComponenteB() {
+  const { datosGlobales } = useContext(MiContexto); // Solo necesita leer
+
+  return (
+    &lt;div>
+      &lt;p>Componente B lee: {datosGlobales}&lt;/p>
+    &lt;/div>
+  );
+}
+                </code></pre>
+                <p><code>useContext</code> te da acceso al valor proporcionado por el <code>Provider</code> más cercano en el árbol.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos datos compartidos entre dos "componentes" que usan un estado global:</p>
+                    <div class="demo-area">
+                        <p>Estado Global (simulado): <span id="global-state-display">Valor inicial global</span></p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                            <div style="border: 1px solid blue; padding: 10px;">
+                                <p>Componente A:</p>
+                                <p>Lee: <span class="global-reader">Valor inicial global</span></p>
+                                <button id="global-update-a">Actualizar desde A</button>
+                            </div>
+                             <div style="border: 1px solid green; padding: 10px;">
+                                <p>Componente B:</p>
+                                <p>Lee: <span class="global-reader">Valor inicial global</span></p>
+                                {/* B no tiene botón, solo lee */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>Si haces clic en el botón "Actualizar desde A" en la demostración, ¿qué texto esperas que muestre el "Componente B"?</p>
+                    <div class="exercise-area">
+                        Tu respuesta: <input type="text" id="global-exercise-input">
+                        <button class="check-btn" data-exercise="global">Verificar</button>
+                        <div class="feedback" id="global-exercise-feedback"></div>
+                    </div>
+                </div>
+
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+            <!-- Step 3: Estado Derivado -->
+             <section class="step" id="step-3">
+                <h2>3. Estado Derivado</h2>
+                <p>El estado derivado no se almacena directamente, sino que se *calcula* a partir de otro estado o props existentes.</p>
+                <p>Por ejemplo, si tienes un estado con una lista de productos y otro estado con un filtro, el estado derivado sería la lista de productos *filtrados*. No almacenas la lista filtrada; la calculas cada vez que la lista original o el filtro cambian.</p>
+                <p>Derivar estado es preferible a duplicarlo, ya que evita inconsistencias.</p>
+
+                <h3>Sintaxis Básica (React)</h3>
+                <p>Simplemente calculas el valor en el cuerpo de tu componente, antes del <code>return</code>:</p>
+                <pre><code>
+import React, { useState } from 'react';
+
+function ListaDeTareas() {
+  const [tareas, setTareas] = useState([
+    { id: 1, texto: 'Aprender React', completada: true },
+    { id: 2, texto: 'Hacer ejercicio', completada: false },
+    { id: 3, texto: 'Comprar víveres', completada: true },
+    { id: 4, texto: 'Leer un libro', completada: false },
+  ]);
+  const [mostrarCompletadas, setMostrarCompletadas] = useState(false);
+
+  // Estado derivado: calculamos las tareas visibles
+  const tareasVisibles = mostrarCompletadas
+    ? tareas.filter(tarea => tarea.completada) // Mostrar solo completadas
+    : tareas; // Mostrar todas si no se filtra
+
+  return (
+    &lt;div>
+      &lt;h3>Tareas&lt;/h3>
+      &lt;label>
+        &lt;input
+          type="checkbox"
+          checked={mostrarCompletadas}
+          onChange={() => setMostrarCompletadas(!mostrarCompletadas)}
+        />
+        Mostrar solo completadas
+      &lt;/label>
+      &lt;ul>
+        {tareasVisibles.map(tarea => (
+          &lt;li key={tarea.id} style={{ textDecoration: tarea.completada ? 'line-through' : 'none' }}>
+            {tarea.texto}
+          &lt;/li>
+        ))}
+      &lt;/ul>
+    &lt;/div>
+  );
+}
+                </code></pre>
+                <p>Cada vez que <code>tareas</code> o <code>mostrarCompletadas</code> cambian, <code>tareasVisibles</code> se recalcula automáticamente.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos una lista de números y un filtro:</p>
+                    <div class="demo-area">
+                         <p>Números originales: <code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code></p>
+                         <p>Mostrar solo pares: <span id="derived-filter-display">No</span>
+                            <button id="derived-toggle-filter">Alternar Filtro</button>
+                         </p>
+                         <p>Números derivados (visibles): <span id="derived-output-display">[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span></p>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>En la demostración, si el filtro "Mostrar solo pares" está activo ("Sí"), ¿qué números esperas ver en la lista "Números derivados (visibles)"?</p>
+                    <div class="exercise-area">
+                        Tu respuesta (separa con comas, sin espacios): <input type="text" id="derived-exercise-input">
+                        <button class="check-btn" data-exercise="derived">Verificar</button>
+                        <div class="feedback" id="derived-exercise-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+             <!-- Step 4: Estado Asincrónico -->
+             <section class="step" id="step-4">
+                <h2>4. Estado Asincrónico</h2>
+                <p>El estado asincrónico se refiere a los datos que se cargan de forma asíncrona, típicamente desde una API (un servidor).</p>
+                <p>Gestionar este tipo de estado implica manejar diferentes estados intermedios: cargando (loading), éxito (data received), y error (error fetching).</p>
+                <p>Hooks como <code>useState</code> se usan para guardar los datos, el estado de carga y el estado de error. Hooks como <code>useEffect</code> se usan para realizar las operaciones asíncronas (como <code>fetch</code>).</p>
+
+                <h3>Sintaxis Básica (React Hooks)</h3>
+                <pre><code>
+import React, { useState, useEffect } from 'react';
+
+function DatosRemotos() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Esto se ejecuta después del render inicial
+    const fetchData = async () => {
+      try {
+        setLoading(true); // Indicar que estamos cargando
+        const response = await fetch('https://api.example.com/data');
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const result = await response.json();
+        setData(result); // Guarda los datos recibidos
+      } catch (err) {
+        setError(err); // Guarda el error
+      } finally {
+        setLoading(false); // Indicar que la carga ha terminado
+      }
+    };
+
+    fetchData(); // Llama a la función asíncrona
+
+  }, []); // Array de dependencias vacío: solo se ejecuta una vez al montar
+
+  if (loading) {
+    return &lt;p>Cargando datos...&lt;/p>;
+  }
+
+  if (error) {
+    return &lt;p>Error al cargar datos: {error.message}&lt;/p>;
+  }
+
+  return (
+    &lt;div>
+      &lt;h3>Datos cargados:&lt;/h3>
+      &lt;p>{JSON.stringify(data)}&lt;/p> {/* Muestra los datos (ejemplo) */}
+    &lt;/div>
+  );
+}
+                </code></pre>
+                <p>Manejar los estados <code>loading</code> y <code>error</code> es crucial para proporcionar una buena experiencia de usuario.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos una carga de datos con un retraso:</p>
+                    <div class="demo-area">
+                        <p>Estado actual: <span id="async-state-display">Inactivo</span></p>
+                        <p>Datos cargados: <span id="async-data-display">N/A</span></p>
+                        <button id="async-start-loading">Simular Carga de Datos</button>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>Durante la simulación de carga (entre que haces clic en el botón y aparecen los datos), ¿qué texto muestra la etiqueta "Estado actual"?</p>
+                     <div class="exercise-area">
+                        Tu respuesta: <input type="text" id="async-exercise-input">
+                        <button class="check-btn" data-exercise="async">Verificar</button>
+                        <div class="feedback" id="async-exercise-feedback"></div>
+                    </div>
+                </div>
+
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+             <!-- Step 5: Estado de Formulario -->
+             <section class="step" id="step-5">
+                <h2>5. Estado de Formulario</h2>
+                <p>El estado de formulario gestiona los valores de los inputs (texto, checkboxes, etc.) dentro de un formulario.</p>
+                <p>En React, es común usar estado local para controlar los inputs, creando "inputs controlados". Esto significa que el valor del input es gestionado por el estado de React, no por el DOM.</p>
+
+                <h3>Sintaxis Básica (React Hooks)</h3>
+                 <pre><code>
+import React, { useState } from 'react';
+
+function FormularioSimple() {
+  const [nombre, setNombre] = useState(''); // Estado para el input 'nombre'
+  const [email, setEmail] = useState('');   // Estado para el input 'email'
+
+  const handleNombreChange = (event) => {
+    setNombre(event.target.value); // Actualiza el estado con el valor del input
+  };
+
+   const handleEmailChange = (event) => {
+    setEmail(event.target.value); // Actualiza el estado con el valor del input
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Evita que la página se recargue
+    alert(`Enviando: Nombre - ${nombre}, Email - ${email}`);
+    // Aquí podrías enviar los datos a una API, etc.
+    setNombre(''); // Opcional: Limpiar formulario después de enviar
+    setEmail('');
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}>
+      &lt;div>
+        &lt;label>Nombre:&lt;/label>
+        &lt;input type="text" value={nombre} onChange={handleNombreChange} />
+      &lt;/div>
+      &lt;div>
+        &lt;label>Email:&lt;/label>
+        &lt;input type="email" value={email} onChange={handleEmailChange} />
+      &lt;/div>
+      &lt;button type="submit">Enviar&lt;/button>
+    &lt;/form>
+  );
+}
+                 </code></pre>
+                <p>Asociar el atributo <code>value</code> del input al estado y usar el evento <code>onChange</code> para actualizar el estado con <code>setNombre(event.target.value)</code> es el patrón estándar para inputs controlados.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos un campo de input controlado:</p>
+                    <div class="demo-area">
+                        <p>Input controlado: <input type="text" id="form-demo-input"></p>
+                        <p>Valor del estado (simulado): "<span id="form-state-display"></span>"</p>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>En la demostración anterior, si escribes "Hola Mundo" en el input, ¿qué mostrará la etiqueta "Valor del estado (simulado)"?</p>
+                     <div class="exercise-area">
+                        Tu respuesta (texto exacto entre comillas): <input type="text" id="form-exercise-input">
+                        <button class="check-btn" data-exercise="form">Verificar</button>
+                        <div class="feedback" id="form-exercise-feedback"></div>
+                    </div>
+                </div>
+
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+             <!-- Step 6: Estado de UI -->
+             <section class="step" id="step-6">
+                <h2>6. Estado de UI (User Interface)</h2>
+                <p>El estado de UI se refiere a los datos que gestionan la interactividad y apariencia de la interfaz de usuario, pero que no son datos principales de la aplicación (como datos de usuario, productos, etc.).</p>
+                <p>Ejemplos comunes: si un modal está abierto o cerrado, si un menú desplegable es visible, qué pestaña está activa, si un botón está deshabilitado.</p>
+                <p>Este estado suele ser local del componente que controla esa parte específica de la UI, pero a veces puede ser global si múltiples componentes necesitan saber el estado (ej: si un modal global está abierto).</p>
+
+                 <h3>Sintaxis Básica (React Hooks)</h3>
+                 <p>Típicamente se usa <code>useState</code> para booleanos o strings simples:</p>
+                <pre><code>
+import React, { useState } from 'react';
+
+function Modal() {
+  const [isOpen, setIsOpen] = useState(false); // Estado de UI: ¿está abierto el modal?
+
+  const toggleModal = () => {
+    setIsOpen(!isOpen); // Cambia el estado
+  };
+
+  return (
+    &lt;div>
+      &lt;button onClick={toggleModal}>
+        {isOpen ? 'Cerrar Modal' : 'Abrir Modal'}
+      &lt;/button>
+
+      {/* Renderiza el contenido del modal solo si isOpen es true */}
+      {isOpen && (
+        &lt;div style={{
+            border: '1px solid #ccc',
+            padding: '20px',
+            marginTop: '10px',
+            backgroundColor: '#fff'
+         }}>
+          &lt;h3>Contenido del Modal&lt;/h3>
+          &lt;p>¡Hola desde el modal!&lt;/p>
+           &lt;button onClick={toggleModal}>Cerrar&lt;/button>
+        &lt;/div>
+      )}
+    &lt;/div>
+  );
+}
+                 </code></pre>
+                <p>El estado <code>isOpen</code> es puramente estado de UI; no afecta los datos principales de la aplicación, solo su presentación.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada)</h3>
+                    <p>Simulemos la visibilidad de un panel de contenido:</p>
+                    <div class="demo-area">
+                        <p>Panel visible: <span id="ui-visible-display">No</span></p>
+                        <button id="ui-toggle-button">Mostrar Panel</button>
+                         <div id="ui-panel-content" style="border: 1px dashed blue; padding: 10px; margin-top: 10px; display: none;">
+                             Este es el contenido del panel de UI.
+                         </div>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>En la demostración, si el panel está visible y haces clic en el botón (que ahora dice "Ocultar Panel"), ¿qué texto mostrará la etiqueta "Panel visible"?</p>
+                    <div class="exercise-area">
+                        Tu respuesta: <input type="text" id="ui-exercise-input">
+                        <button class="check-btn" data-exercise="ui">Verificar</button>
+                        <div class="feedback" id="ui-exercise-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+             <!-- Step 7: Estado Persistente -->
+             <section class="step" id="step-7">
+                <h2>7. Estado Persistente</h2>
+                <p>El estado persistente es aquel que se mantiene entre sesiones de navegación o recargas de página.</p>
+                <p>Esto es útil para cosas como preferencias de usuario (modo oscuro), un carrito de compras, o datos de autenticación.</p>
+                <p>En aplicaciones web, la persistencia se logra típicamente guardando el estado en <code>localStorage</code>, <code>sessionStorage</code>, cookies o bases de datos en el servidor.</p>
+
+                 <h3>Implementación Común (React con localStorage)</h3>
+                 <p>Puedes usar <code>useState</code> junto con <code>useEffect</code> para leer/escribir en <code>localStorage</code>:</p>
+                <pre><code>
+import React, { useState, useEffect } from 'react';
+
+function ContadorPersistente() {
+  // 1. Obtén el valor inicial de localStorage o usa un valor por defecto
+  const [contador, setContador] = useState(() => {
+    const savedCount = localStorage.getItem('miContador');
+    return savedCount !== null ? parseInt(savedCount, 10) : 0;
+  });
+
+  // 2. Usa useEffect para guardar el estado en localStorage cada vez que cambie
+  useEffect(() => {
+    localStorage.setItem('miContador', contador);
+  }, [contador]); // Ejecuta este efecto cuando 'contador' cambie
+
+  const incrementar = () => {
+    setContador(contador + 1);
+  };
+
+  // 3. Agrega un botón para "reiniciar" (opcional, para demo)
+  const reiniciar = () => {
+    setContador(0);
+    // Opcional: localStorage.removeItem('miContador');
+  };
+
+
+  return (
+    &lt;div>
+      &lt;p>Contador persistente: {contador}&lt;/p>
+      &lt;button onClick={incrementar}>Incrementar&lt;/button>
+      &lt;button onClick={reiniciar}>Reiniciar&lt;/button>
+      &lt;p>&lt;em>(El valor se guarda en tu navegador. ¡Prueba a recargar la página!)&lt;/em>&lt;/p>
+    &lt;/div>
+  );
+}
+                 </code></pre>
+                <p>La función dentro de <code>useState</code> para el valor inicial asegura que solo se lea de <code>localStorage</code> una vez al montar el componente.</p>
+
+                <div class="demo">
+                    <h3>Demostración (Simulada con localStorage)</h3>
+                    <p>Simulemos un valor que persiste usando el almacenamiento local del navegador:</p>
+                    <div class="demo-area">
+                        <p>Valor persistente: <span id="persistent-value-display">0</span></p>
+                        <button id="persistent-increment">Incrementar</button>
+                        <button id="persistent-reset">Reiniciar</button>
+                        <p><em>(Intenta incrementar el valor, recarga la página y ve si se mantuvo.)</em></p>
+                    </div>
+                </div>
+
+                 <div class="exercise">
+                    <h3>Ejercicio Práctico</h3>
+                    <p>Incrementa el "Valor persistente" en la demostración hasta que muestre "5". Luego, sin usar el botón "Reiniciar", ¿qué necesitas hacer en tu navegador para ver el valor "5" de nuevo después de que la página se refresque?</p>
+                    <div class="exercise-area">
+                        Tu respuesta (ej: "cerrar el navegador", "abrir una nueva pestaña", "recargar la página"): <input type="text" id="persistent-exercise-input">
+                        <button class="check-btn" data-exercise="persistent">Verificar</button>
+                        <div class="feedback" id="persistent-exercise-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Anterior</button>
+                    <button class="next-btn" disabled>Siguiente</button>
+                </div>
+            </section>
+
+             <!-- Step 8: Final -->
+             <section class="step" id="step-8">
+                <h2>¡Felicidades!</h2>
+                <p>Has completado la guía básica sobre diferentes tipos de estado en React.</p>
+                <p>Comprender y gestionar el estado es fundamental para construir aplicaciones React robustas y mantenibles.</p>
+                <p>Hemos cubierto:</p>
+                <ul>
+                    <li><strong>Estado Local:</strong> Dentro de un componente (<code>useState</code>).</li>
+                    <li><strong>Estado Global:</strong> Compartido entre componentes (<code>useContext</code>, librerías).</li>
+                    <li><strong>Estado Derivado:</strong> Calculado a partir de otro estado.</li>
+                    <li><strong>Estado Asincrónico:</strong> Datos cargados (APIs, etc.), gestionando carga y error.</li>
+                    <li><strong>Estado de Formulario:</strong> Valores de inputs (inputs controlados).</li>
+                    <li><strong>Estado de UI:</strong> Visibilidad, pestañas, etc.</li>
+                    <li><strong>Estado Persistente:</strong> Guardado entre sesiones (<code>localStorage</code>, etc.).</li>
+                </ul>
+                 <p>¡Sigue practicando y construyendo con React!</p>
+
+
+                <div class="nav-buttons">
+                    <button class="prev-btn">Revisar</button>
+                </div>
+            </section>
+
+
+        </main>
+    </div>
+
+    <script>
+        const steps = document.querySelectorAll('.step');
+        const navItems = document.querySelectorAll('#sidebar li');
+        const nextBtns = document.querySelectorAll('.next-btn');
+        const prevBtns = document.querySelectorAll('.prev-btn');
+        const checkBtns = document.querySelectorAll('.check-btn');
+
+        let currentStep = 0;
+
+        // --- Navigation Logic ---
+        function showStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= steps.length) {
+                return; // Stay within bounds
+            }
+
+            // Hide all steps and remove active class from nav
+            steps.forEach(step => step.classList.remove('active'));
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show the selected step and add active class to nav
+            const targetStepElement = document.getElementById(`step-${stepIndex}`);
+            if (targetStepElement) {
+                 targetStepElement.classList.add('active');
+                 const targetNavItem = document.querySelector(`#sidebar li[data-step="${stepIndex}"]`);
+                 if (targetNavItem) {
+                     targetNavItem.classList.add('active');
+                     targetNavItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Scroll nav item into view
+                 }
+                 currentStep = stepIndex;
+                 updateNavButtons(); // Update button states
+            }
+        }
+
+        function updateNavButtons() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const prevButton = currentStepElement.querySelector('.prev-btn');
+            const nextButton = currentStepElement.querySelector('.next-btn');
+
+            if (prevButton) {
+                prevButton.disabled = currentStep === 0;
+            }
+            if (nextButton) {
+                 // Next button is initially disabled if there's an exercise in this step
+                 // It gets enabled by the exercise verification logic
+                 const exerciseArea = currentStepElement.querySelector('.exercise-area');
+                 if (!exerciseArea) {
+                     nextButton.disabled = currentStep === steps.length - 1;
+                 } else {
+                    // Exercise step: keep next disabled until exercise is passed
+                    // The verification logic will enable it
+                 }
+            }
+        }
+
+        // Add event listeners for navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const stepIndex = parseInt(item.dataset.step, 10);
+                showStep(stepIndex);
+            });
+        });
+
+        nextBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                showStep(currentStep + 1);
+            });
+        });
+
+        prevBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                showStep(currentStep - 1);
+            });
+        });
+
+
+        // --- Demo Logic ---
+
+        // Step 1: Local State Demo
+        const localCounterDisplay = document.getElementById('local-counter-display');
+        const localCounterIncrementBtn = document.getElementById('local-counter-increment');
+        let localCounter = 0; // Simulated local state
+
+        if (localCounterIncrementBtn) {
+            localCounterIncrementBtn.addEventListener('click', () => {
+                localCounter++;
+                localCounterDisplay.textContent = localCounter;
+            });
+        }
+
+        // Step 2: Global State Demo
+        const globalStateDisplay = document.getElementById('global-state-display');
+        const globalReaders = document.querySelectorAll('.global-reader');
+        const globalUpdateABtn = document.getElementById('global-update-a');
+        let globalState = 'Valor inicial global'; // Simulated global state
+
+        function updateGlobalDisplays() {
+             globalStateDisplay.textContent = globalState;
+             globalReaders.forEach(reader => reader.textContent = globalState);
+        }
+
+        if (globalUpdateABtn) {
+            globalUpdateABtn.addEventListener('click', () => {
+                globalState = 'Actualizado desde A';
+                updateGlobalDisplays();
+            });
+        }
+         updateGlobalDisplays(); // Initial display
+
+        // Step 3: Derived State Demo
+        const derivedFilterDisplay = document.getElementById('derived-filter-display');
+        const derivedToggleFilterBtn = document.getElementById('derived-toggle-filter');
+        const derivedOutputDisplay = document.getElementById('derived-output-display');
+        const originalNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Simulated source state
+        let showEvenOnly = false; // Simulated filter state
+
+        function updateDerivedDisplay() {
+            derivedFilterDisplay.textContent = showEvenOnly ? 'Sí' : 'No';
+            const visibleNumbers = showEvenOnly ? originalNumbers.filter(n => n % 2 === 0) : originalNumbers;
+            derivedOutputDisplay.textContent = '[' + visibleNumbers.join(', ') + ']';
+            derivedToggleFilterBtn.textContent = showEvenOnly ? 'Mostrar Todos' : 'Alternar Filtro';
+        }
+
+         if (derivedToggleFilterBtn) {
+            derivedToggleFilterBtn.addEventListener('click', () => {
+                showEvenOnly = !showEvenOnly;
+                updateDerivedDisplay();
+            });
+        }
+        updateDerivedDisplay(); // Initial display
+
+
+        // Step 4: Async State Demo
+        const asyncStateDisplay = document.getElementById('async-state-display');
+        const asyncDataDisplay = document.getElementById('async-data-display');
+        const asyncStartBtn = document.getElementById('async-start-loading');
+
+        if (asyncStartBtn) {
+            asyncStartBtn.addEventListener('click', () => {
+                asyncStateDisplay.textContent = 'Cargando...';
+                asyncDataDisplay.textContent = 'N/A';
+                asyncStartBtn.disabled = true;
+
+                setTimeout(() => {
+                    const simulatedData = { id: 1, name: 'Datos Cargados' };
+                    asyncStateDisplay.textContent = 'Datos recibidos';
+                    asyncDataDisplay.textContent = JSON.stringify(simulatedData);
+                    asyncStartBtn.disabled = false;
+                }, 2000); // Simulate network delay
+            });
+        }
+
+        // Step 5: Form State Demo
+        const formDemoInput = document.getElementById('form-demo-input');
+        const formStateDisplay = document.getElementById('form-state-display');
+
+        if (formDemoInput && formStateDisplay) {
+            formDemoInput.addEventListener('input', (event) => {
+                formStateDisplay.textContent = event.target.value;
+            });
+        }
+
+        // Step 6: UI State Demo
+        const uiVisibleDisplay = document.getElementById('ui-visible-display');
+        const uiToggleButton = document.getElementById('ui-toggle-button');
+        const uiPanelContent = document.getElementById('ui-panel-content');
+        let isPanelVisible = false; // Simulated UI state
+
+        function updateUIPanel() {
+            uiVisibleDisplay.textContent = isPanelVisible ? 'Sí' : 'No';
+            uiPanelContent.style.display = isPanelVisible ? 'block' : 'none';
+            uiToggleButton.textContent = isPanelVisible ? 'Ocultar Panel' : 'Mostrar Panel';
+        }
+
+         if (uiToggleButton) {
+            uiToggleButton.addEventListener('click', () => {
+                isPanelVisible = !isPanelVisible;
+                updateUIPanel();
+            });
+        }
+        updateUIPanel(); // Initial display
+
+        // Step 7: Persistent State Demo
+        const persistentValueDisplay = document.getElementById('persistent-value-display');
+        const persistentIncrementBtn = document.getElementById('persistent-increment');
+        const persistentResetBtn = document.getElementById('persistent-reset');
+
+        // Get initial value from localStorage
+        let persistentValue = parseInt(localStorage.getItem('guidePersistentValue') || '0', 10);
+
+        function updatePersistentDisplay() {
+            persistentValueDisplay.textContent = persistentValue;
+             // Save to localStorage whenever value changes
+            localStorage.setItem('guidePersistentValue', persistentValue);
+        }
+
+        if (persistentIncrementBtn && persistentResetBtn) {
+             persistentIncrementBtn.addEventListener('click', () => {
+                persistentValue++;
+                updatePersistentDisplay();
+            });
+
+            persistentResetBtn.addEventListener('click', () => {
+                persistentValue = 0;
+                updatePersistentDisplay();
+                // Optional: localStorage.removeItem('guidePersistentValue');
+            });
+        }
+        updatePersistentDisplay(); // Initial display from storage
+
+
+        // --- Exercise Logic ---
+
+        checkBtns.forEach(button => {
+            button.addEventListener('click', () => {
+                const exerciseType = button.dataset.exercise;
+                const exerciseArea = button.closest('.exercise-area');
+                const feedbackElement = exerciseArea.querySelector('.feedback');
+                const inputElement = exerciseArea.querySelector('input, select, textarea'); // Or specific input type if needed
+                const nextButton = button.closest('.step').querySelector('.next-btn');
+                let isCorrect = false;
+                let feedbackText = '';
+
+                // Reset feedback
+                feedbackElement.textContent = '';
+                feedbackElement.className = 'feedback'; // Reset classes
+
+                if (!inputElement || (inputElement.value.trim() === '' && exerciseType !== 'async')) {
+                    feedbackElement.textContent = 'Por favor, ingresa una respuesta.';
+                    feedbackElement.classList.add('incorrect');
+                    return;
+                }
+
+                const userAnswer = inputElement.value.trim().toLowerCase(); // Use lowercase for easier comparison
+
+                switch (exerciseType) {
+                    case 'local':
+                        // Check if user clicks increment 3 times, counter should be 3
+                        // This exercise checks the *prediction* based on the demo.
+                        // Correct answer for the *prediction* is 3.
+                        if (userAnswer === '3') {
+                            isCorrect = true;
+                            feedbackText = '¡Correcto! Cada clic incrementa el estado local en 1.';
+                        } else {
+                            feedbackText = `Incorrecto. Intenta incrementar el contador 3 veces en la demostración y observa el valor.`;
+                        }
+                        break;
+                    case 'global':
+                         // User predicts what Component B shows after A updates.
+                        if (userAnswer === 'actualizado desde a') {
+                             isCorrect = true;
+                            feedbackText = '¡Correcto! Ambos componentes leen el mismo estado global.';
+                        } else {
+                            feedbackText = `Incorrecto. El estado global se comparte. Intenta hacer clic en el botón de Componente A en la demostración y observa Componente B.`;
+                        }
+                        break;
+                     case 'derived':
+                        // User predicts the list when filter is ON
+                        // Original: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                        // Filter Even: [2, 4, 6, 8, 10]
+                        if (userAnswer === '2,4,6,8,10') {
+                            isCorrect = true;
+                            feedbackText = '¡Correcto! El estado derivado se calcula a partir de los números originales y el estado del filtro.';
+                        } else {
+                            feedbackText = `Incorrecto. Cuando el filtro está activo, solo los números pares cumplen la condición. La respuesta debe ser "2,4,6,8,10".`;
+                        }
+                        break;
+                    case 'async':
+                        // User predicts the state while loading
+                        if (userAnswer === 'cargando...') {
+                            isCorrect = true;
+                            feedbackText = '¡Correcto! Es importante mostrar un estado de carga al usuario durante operaciones asíncronas.';
+                        } else {
+                             feedbackText = `Incorrecto. Durante la espera, la aplicación muestra un estado de "cargando". Intenta simular la carga y observa el texto.`;
+                        }
+                        break;
+                    case 'form':
+                        // User predicts the state value from input
+                         // The exact value entered in the input, wrapped in quotes
+                        const expectedFormAnswer = `"${formDemoInput.value.trim()}"`.toLowerCase(); // Use the actual demo input value
+                        if (userAnswer === expectedFormAnswer) {
+                            isCorrect = true;
+                            feedbackText = '¡Correcto! El estado del componente controlado siempre refleja el valor actual del input.';
+                        } else {
+                             feedbackText = `Incorrecto. El estado simulado muestra exactamente lo que escribes en el input, entre comillas. Asegúrate de escribir el texto que pusiste en el input envuelto en comillas dobles.`;
+                        }
+                        break;
+                     case 'ui':
+                         // User predicts UI state after toggling visibility ON then OFF
+                        if (userAnswer === 'no') {
+                             isCorrect = true;
+                            feedbackText = '¡Correcto! Hacer clic nuevamente en el botón alterna el estado de UI a su valor opuesto.';
+                        } else {
+                            feedbackText = `Incorrecto. El estado de UI (como la visibilidad) cambia al alternar el botón. Si estaba visible, el siguiente clic lo ocultará ("No").`;
+                        }
+                        break;
+                     case 'persistent':
+                         // User predicts how to see the value again after refresh
+                         if (userAnswer.includes('recargar la página')) { // Be a bit flexible
+                            isCorrect = true;
+                            feedbackText = '¡Correcto! Recargar la página carga el valor guardado desde el almacenamiento local.';
+                        } else {
+                            feedbackText = `Incorrecto. El valor se guarda en el almacenamiento local del navegador. Necesitas hacer que el navegador lea ese almacenamiento de nuevo.`;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (isCorrect) {
+                    feedbackElement.classList.add('correct');
+                    if (nextButton) {
+                         nextButton.disabled = false; // Enable the next button only on correct answer
+                    }
+                } else {
+                    feedbackElement.classList.add('incorrect');
+                     if (nextButton) {
+                         nextButton.disabled = true; // Keep disabled until correct
+                    }
+                }
+                 feedbackElement.textContent = feedbackText;
+            });
+        });
+
+
+        // Initialize the guide on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep(0);
+            // Re-apply initial states for demos that might be affected by refresh (like persistent)
+            updateGlobalDisplays();
+            updateDerivedDisplay();
+            updateUIPanel();
+            updatePersistentDisplay();
+             if(formDemoInput) {
+                 formStateDisplay.textContent = formDemoInput.value; // Update initial display for form demo
+             }
+
+             // Disable next buttons on steps with exercises initially
+             steps.forEach(step => {
+                 if (step.querySelector('.exercise-area')) {
+                     const nextButton = step.querySelector('.next-btn');
+                     if (nextButton) {
+                        nextButton.disabled = true;
+                     }
+                 }
+             });
+             // Ensure first step and last step buttons are correct
+             document.getElementById('step-0').querySelector('.prev-btn')?.setAttribute('disabled', 'true'); // No prev on step 0
+             document.getElementById('step-8').querySelector('.next-btn')?.setAttribute('disabled', 'true'); // No next on last step (it doesn't have one)
+
+
+        });
+
+
+    </script>
+</body>
+</html>
